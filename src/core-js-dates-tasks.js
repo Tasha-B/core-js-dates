@@ -75,8 +75,12 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const day = date.getDay();
+  const today = date.getDate();
+  return day < 5
+    ? new Date(date.setDate(today + (5 - day)))
+    : new Date(date.setDate(today + (7 - day + 5)));
 }
 
 /**
@@ -159,8 +163,16 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const start = new Date(year, month - 1, 1);
+  const end = new Date(year, month, 0);
+  let count = 0;
+  for (let day = start; day <= end; day.setDate(day.getDate() + 1)) {
+    if (day.getDay() === 0 || day.getDay() === 6) {
+      count += 1;
+    }
+  }
+  return count;
 }
 
 /**
@@ -176,8 +188,11 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const year = new Date(date.getFullYear(), 0, 1);
+  const days = (date - year) / (1000 * 60 * 60 * 24);
+
+  return Math.ceil((days + (year.getDay() || 7)) / 7);
 }
 
 /**
@@ -206,8 +221,8 @@ function getNextFridayThe13th(/* date */) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  return Math.ceil((date.getMonth() + 1) / 3);
 }
 
 /**
@@ -244,8 +259,9 @@ function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
  * Date(2022, 2, 1) => false
  * Date(2020, 2, 1) => true
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const year = date.getFullYear();
+  return year % 4 === 0 || year % 400 === 0;
 }
 
 module.exports = {
